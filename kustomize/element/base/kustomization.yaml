@@ -1,0 +1,31 @@
+---
+sortOptions:
+  order: fifo
+resources:
+  - namespace.yaml
+  - all.yaml
+
+images:
+  - name: heisenbridge
+    newName: hif1/heisenbridge
+    newTag: "latest"
+  - name: yq
+    newName: ghcr.io/linuxserver/yq
+    newTag: "latest"
+
+patches:
+  - path: patch-heisenbridge-configmap-synapse.yaml
+    target:
+      kind: ConfigMap
+      name: ess-synapse
+      namespace: ess
+  - path: patch-heisenbridge-statefulset-synapse.yaml
+    target:
+      kind: StatefulSet
+      name: ess-synapse-main
+      namespace: ess
+  - path: patch-heisenbridge-deployment-haproxy.yaml
+    target:
+      kind: Deployment
+      name: ess-haproxy
+      namespace: ess

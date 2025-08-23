@@ -1,0 +1,127 @@
+[
+    {
+        "op": "add",
+        "path": "/spec/listeners/-",
+        "value": {
+            "name": "chat-ess-https",
+            "port": 443,
+            "protocol": "HTTPS",
+            "hostname": "chat.ess.your.domain.tld",
+            "allowedRoutes": {
+                "namespaces": {
+                    "from": "All"
+                }
+            },
+            "tls": {
+                "certificateRefs": [
+                    {
+                        "group": "",
+                        "kind": "Secret",
+                        "name": "chat-ess-gw-tls-secret"
+                    }
+                ],
+                "mode": "Terminate"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/spec/listeners/-",
+        "value": {
+            "name": "account-ess-https",
+            "port": 443,
+            "protocol": "HTTPS",
+            "hostname": "account.ess.your.domain.tld",
+            "allowedRoutes": {
+                "namespaces": {
+                    "from": "All"
+                }
+            },
+            "tls": {
+                "certificateRefs": [
+                    {
+                        "group": "",
+                        "kind": "Secret",
+                        "name": "account-ess-gw-tls-secret"
+                    }
+                ],
+                "mode": "Terminate"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/spec/listeners/-",
+        "value": {
+            "name": "mrtc-ess-https",
+            "port": 443,
+            "protocol": "HTTPS",
+            "hostname": "mrtc.ess.your.domain.tld",
+            "allowedRoutes": {
+                "namespaces": {
+                    "from": "All"
+                }
+            },
+            "tls": {
+                "certificateRefs": [
+                    {
+                        "group": "",
+                        "kind": "Secret",
+                        "name": "mrtc-ess-gw-tls-secret"
+                    }
+                ],
+                "mode": "Terminate"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/spec/listeners/-",
+        "value": {
+            "name": "matrix-ess-https",
+            "port": 443,
+            "protocol": "HTTPS",
+            "hostname": "matrix.ess.your.domain.tld",
+            "allowedRoutes": {
+                "namespaces": {
+                    "from": "All"
+                }
+            },
+            "tls": {
+                "certificateRefs": [
+                    {
+                        "group": "",
+                        "kind": "Secret",
+                        "name": "matrix-ess-gw-tls-secret"
+                    }
+                ],
+                "mode": "Terminate"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/spec/listeners/-",
+        "value": {
+            "name": "well-known-https",
+            "port": 443,
+            "protocol": "HTTPS",
+            "hostname": "ess.your.domain.tld",
+            "allowedRoutes": {
+                "namespaces": {
+                    "from": "All"
+                }
+            },
+            "tls": {
+                "certificateRefs": [
+                    {
+                        "group": "",
+                        "kind": "Secret",
+                        "name": "ess-gw-tls-secret"
+                    }
+                ],
+                "mode": "Terminate"
+            }
+        }
+    }
+]

@@ -1,0 +1,13 @@
+---
+# NOTE(cloudnull): this is a simple script to edit the homeserver.yaml for the heisenbridge app service
+#                  it adds the heisenbridge app service configuration to the homeserver.yaml
+- op: add
+  path: /data/homeserver-edit-heisenbridge.sh
+  value: |
+    #!/bin/bash
+    set -exo pipefail
+    chmod 0640 /conf/homeserver.yaml
+    yq -yi '.app_service_config_files+=["/conf/heisenbridge.yaml"]' /conf/homeserver.yaml
+    yq -yi ".enable_registration_without_verification=true" /conf/homeserver.yaml
+    yq -yi '.encryption_enabled_by_default_for_room_type="off"' /conf/homeserver.yaml
+    chmod 0440 /conf/homeserver.yaml

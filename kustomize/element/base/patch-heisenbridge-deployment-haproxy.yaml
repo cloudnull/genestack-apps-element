@@ -1,0 +1,13 @@
+---
+# NOTE(cloudnull): this is set lower, the default is 40000 which requires a lot of file descriptors.
+#                  while the default is a OK value, we don't need to cater to 40K connections and we
+#                  want to keep the resource usage lower. If you need to change this value, make sure
+#                  to also update the file descriptor limits accordingly:
+#                  https://www.haproxy.com/documentation/haproxy-configuration-manual/latest/#3.2-maxconn
+- op: add
+  path: /spec/template/spec/containers/0/args/-
+  value: "-n"
+
+- op: add
+  path: /spec/template/spec/containers/0/args/-
+  value: "10000"

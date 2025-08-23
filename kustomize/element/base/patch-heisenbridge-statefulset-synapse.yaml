@@ -1,0 +1,133 @@
+---
+# NOTE(cloudnull): Add a config volume for the heisenbridge app service which will call our script.
+- op: add
+  path: /spec/template/spec/volumes/-
+  value:
+    name: ess-synapse-config-volume
+    configMap:
+      name: ess-synapse
+
+# NOTE(cloudnull): This volume will be used to mount the heisenbridge configuration file.
+- op: add
+  path: /spec/template/spec/containers/0/volumeMounts/-
+  value:
+    mountPath: /conf/heisenbridge.yaml
+    name: rendered-config
+    readOnly: true
+    subPath: heisenbridge.yaml
+
+# NOTE(cloudnull): This container will be used to run the heisenbridge app service.
+- op: add
+  path: /spec/template/spec/containers/-
+  value:
+    command:
+      - python
+      - -m
+      - heisenbridge
+      - -c
+      - /conf/heisenbridge.yaml
+      - --listen-address
+      - "0.0.0.0"
+      - --listen-port
+      - "9898"
+      - http://localhost:8008
+    name: heisenbridge
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    image: heisenbridge
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /conf
+        name: rendered-config
+    resources:
+      limits:
+        cpu: "1"
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 64Mi
+    livenessProbe:
+      tcpSocket:
+        port: 9898
+      initialDelaySeconds: 3
+      periodSeconds: 3
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: 8008
+      initialDelaySeconds: 3
+      periodSeconds: 3
+
+# NOTE(cloudnull): This init container will be used to generate the heisenbridge configuration file.
+- op: add
+  path: /spec/template/spec/initContainers/-
+  value:
+    command:
+      - python
+      - -m
+      - heisenbridge
+      - -c
+      - /conf/heisenbridge.yaml
+      - --generate
+      - --listen-address
+      - 0.0.0.0
+    name: heisenbridge-generate
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: false
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    image: heisenbridge
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /conf
+        name: rendered-config
+    resources:
+      limits:
+        cpu: "1"
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 64Mi
+
+# NOTE(cloudnull): This init container will be used to modify the heisenbridge configuration file.
+- op: add
+  path: /spec/template/spec/initContainers/-
+  value:
+    command:
+      - bash
+      - /tmp/run.sh
+    name: heisenbridge-yq
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: false
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    image: yq
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /conf
+        name: rendered-config
+      - name: ess-synapse-config-volume
+        mountPath: /tmp/run.sh
+        subPath: homeserver-edit-heisenbridge.sh
+        readOnly: true
+    resources:
+      limits:
+        cpu: "1"
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 64Mi

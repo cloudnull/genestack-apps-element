@@ -1,0 +1,24 @@
+---
+elementWeb:
+  enabled: true
+  ingress:
+    host: chat.ess.your.domain.tld
+matrixAuthenticationService:
+  enabled: true
+  ingress:
+    host: account.ess.your.domain.tld
+matrixRTC:
+  enabled: true
+  ingress:
+    host: mrtc.ess.your.domain.tld
+serverName: ess.your.domain.tld
+synapse:
+  enabled: true
+  ingress:
+    host: matrix.ess.your.domain.tld
+ingress:
+  tlsEnabled: false
+deploymentMarkers:
+  enabled: true
+wellKnownDelegation:
+  enabled: true
