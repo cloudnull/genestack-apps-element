@@ -29,6 +29,33 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  name: custom-admin-ess-gateway-route
+  namespace: ess
+  labels:
+    application: gateway-api
+    service: HTTPRoute
+    route: admin-ess
+spec:
+  parentRefs:
+    - name: flex-gateway
+      sectionName: admin-ess-https
+      namespace: envoy-gateway
+  hostnames:
+    - "admin.ess.your.domain.tld"
+  rules:
+    - backendRefs:
+        - name: ess-element-admin
+          port: 80
+      sessionPersistence:
+        sessionName: EssAdminSession
+        type: Cookie
+        absoluteTimeout: 300s
+        cookieConfig:
+          lifetimeType: Permanent
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
   name: custom-account-ess-gateway-route
   namespace: ess
   labels:

@@ -34,6 +34,8 @@ pushd "${BASEDIR}" || error "Could not change to ${BASEDIR}"
 
 popd || error "Could not change to previous directory"
 
+kubectl apply -f /etc/genestack/kustomize/element/base/namespace.yaml
+
 helm upgrade --install \
              --namespace "ess" \
              ess oci://ghcr.io/element-hq/ess-helm/matrix-stack \

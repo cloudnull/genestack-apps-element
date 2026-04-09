@@ -3,6 +3,10 @@ elementWeb:
   enabled: true
   ingress:
     host: chat.ess.your.domain.tld
+elementAdmin:
+  enabled: true
+  ingress:
+    host: admin.ess.your.domain.tld
 matrixAuthenticationService:
   enabled: true
   ingress:
